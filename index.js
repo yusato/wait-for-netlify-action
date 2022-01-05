@@ -35,15 +35,22 @@ const run = async () => {
       core.setFailed("`url_type` must be pr_number or hash");
     }
     const prefix = urlType === 'pr_number' ? `deploy-preview-${PR_NUMBER}` : github.context.payload.after;
-    console.log(prefix)
+
+
     const url = `https://${prefix}--${siteName}.netlify.app${basePath}`;
+    console.log('==============')
+    console.log(prefix)
+    console.log(url)
+
+
     core.setOutput("url", url);
+
     const extraHeaders = core.getInput("request_headers");
     const headers = !extraHeaders ? {} : JSON.parse(extraHeaders)
     console.log(`Waiting for a 200 from: ${url}`);
-    await waitForUrl(url, MAX_TIMEOUT, {
-      headers,
-    });
+    // await waitForUrl(url, MAX_TIMEOUT, {
+    //   headers,
+    // });
   } catch (error) {
     core.setFailed(error.message);
   }
