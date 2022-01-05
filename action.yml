@@ -17,6 +17,10 @@ inputs:
     description: "Base path to test"
     required: false
     default: "/"
+  url_type:
+    description: "URL type"
+    required: false
+    default: "pr_number"
 outputs:
   url:
     description: "The fully qualified deploy preview URL"

@@ -17,7 +17,6 @@ const waitForUrl = async (url, MAX_TIMEOUT, { headers }) => {
 };
 
 const run = async () => {
-  console.log(github.context)
   try {
     const PR_NUMBER = github.context.payload.number;
     if (!PR_NUMBER) {
@@ -31,7 +30,13 @@ const run = async () => {
     if (!siteName) {
       core.setFailed("Required field `site_name` was not provided");
     }
-    const url = `https://deploy-preview-${PR_NUMBER}--${siteName}.netlify.app${basePath}`;
+    const urlType = core.getInput("url_type") || 'pr_number';
+    if (!['pr_number', 'hash'].includes(urlType)) {
+      core.setFailed("`url_type` must be pr_number or hash");
+    }
+    const prefix = urlType === 'pr_number' ? `deploy-preview-${PR_NUMBER}` : github.context.payload.after;
+    console.log(prefix)
+    const url = `https://${prefix}--${siteName}.netlify.app${basePath}`;
     core.setOutput("url", url);
     const extraHeaders = core.getInput("request_headers");
     const headers = !extraHeaders ? {} : JSON.parse(extraHeaders)
