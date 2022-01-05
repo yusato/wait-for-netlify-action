@@ -17,6 +17,7 @@ const waitForUrl = async (url, MAX_TIMEOUT, { headers }) => {
 };
 
 const run = async () => {
+  console.log(github.context)
   try {
     const PR_NUMBER = github.context.payload.number;
     if (!PR_NUMBER) {
